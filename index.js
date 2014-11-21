@@ -14,11 +14,17 @@ module.exports = function(filepath, callback) {
 
     var zf = new zipfile.ZipFile(filepath);
     var files = getShapeFiles(zf);
-    if (!files) return callback(new Error('Failed to find a shapefile in your zip'));
+    if (!files) return callback(invalid('Failed to find a shapefile in your zip'));
 
     extractFiles(zf, files, callback);
   });
 };
+
+function invalid(msg) {
+  var err = new Error(msg);
+  err.code = 'EINVALID';
+  return err;
+}
 
 function getShapeFiles(zf) {
   // File exts to look for according to http://en.wikipedia.org/wiki/Shapefile
@@ -97,7 +103,7 @@ function extractFiles(zf, files, callback) {
     var cleanName = sanitizeName(filename);
 
     zf.readFile(filename, function(err, data) {
-      if (err) return cb(new Error('Error reading file while unpacking!'));
+      if (err) return cb(invalid('Error reading file while unpacking!'));
 
       var outfile = path.join(dir, cleanName);
       fs.writeFile(outfile, data, function(err) {

@@ -87,9 +87,9 @@ test('executable script: invalid case', function(t) {
 
   exec(valid, function(err, stdout, stderr) {
     t.ok(err, 'expected error');
-    t.equal(err.code, 1, 'expected exit code');
+    t.equal(err.code, 3, 'expected exit code');
     t.equal(stdout, 'Usage: shapefile-fairy <path to zipped shapefile>\n', 'usage logged to stdout');
-    t.equal(stderr, '[Error: Failed to find a shapefile in your zip]\n', 'expected error message');
+    t.equal(stderr, 'Failed to find a shapefile in your zip\n', 'expected error message');
     t.end();
   });
 });
