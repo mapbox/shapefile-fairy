@@ -4,6 +4,8 @@
 
 Extracts files composing a shapefile from a .zip archive into a temporary directory and returns the path to the `.shp` file.
 
+[![Build Status](https://travis-ci.org/mapbox/shapefile-fairy.svg?branch=master)](https://travis-ci.org/mapbox/shapefile-fairy)
+
 ## Install
 
 ```sh
