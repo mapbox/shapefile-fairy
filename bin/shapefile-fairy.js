@@ -6,7 +6,7 @@ var filepath = process.argv[2];
 function fail(err) {
   console.log('Usage: shapefile-fairy <path to zipped shapefile>');
   console.error(err.message);
-  process.exit(err.code === 'EINVALID' ? 3 : 0);
+  process.exit(err.code === 'EINVALID' ? 3 : 1);
 }
 
 shpFairy(filepath, function(err, dir) {
