@@ -53,7 +53,10 @@ function getShapeFiles(zf) {
 
   // Find .shp files
   var shapefileName = filenames.filter(function(filename) {
-    if (path.extname(filename) === '.shp' && filename.indexOf("__MACOSX") === -1) return filename;
+    var accept = true;
+    if (path.extname(filename) !== '.shp') accept = false;
+    if (/__MACOSX/.test(filename)) accept = false;
+    return accept;
   });
 
   // Must contain exactly one .shp file
