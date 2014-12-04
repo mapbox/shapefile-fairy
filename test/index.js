@@ -93,3 +93,19 @@ test('executable script: invalid case', function(t) {
     t.end();
   });
 });
+
+test('executable script: invalid case with --quiet', function(t) {
+  var valid = [
+    path.resolve(__dirname, '..', 'bin', 'shapefile-fairy.js'),
+    fixtures.invalid.noshp,
+    '--quiet'
+  ].join(' ');
+
+  exec(valid, function(err, stdout, stderr) {
+    t.ok(err, 'expected error');
+    t.equal(err.code, 3, 'expected exit code');
+    t.equal(stdout, '', 'empty stdout');
+    t.equal(stderr, 'Failed to find a shapefile in your zip\n', 'expected error message');
+    t.end();
+  });
+});

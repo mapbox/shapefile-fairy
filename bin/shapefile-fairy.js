@@ -1,10 +1,11 @@
 #!/usr/bin/env node
 
 var shpFairy = require('..');
-var filepath = process.argv[2];
+var args = require('minimist')(process.argv.slice(2));
+var filepath = args._[0];
 
 function fail(err) {
-  console.log('Usage: shapefile-fairy <path to zipped shapefile>');
+  if (!args.quiet) console.log('Usage: shapefile-fairy <path to zipped shapefile>');
   console.error(err.message);
   process.exit(err.code === 'EINVALID' ? 3 : 1);
 }
