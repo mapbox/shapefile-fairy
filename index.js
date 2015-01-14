@@ -104,15 +104,10 @@ function extractFiles(zf, files, callback) {
 
   function writeFile(filename, cb) {
     var cleanName = sanitizeName(filename);
-
-    zf.readFile(filename, function(err, data) {
-      if (err) return cb(invalid('Error reading file while unpacking!'));
-
-      var outfile = path.join(dir, cleanName);
-      fs.writeFile(outfile, data, function(err) {
-        if (err) return cb(new Error('Error writing file while unpacking!'));
-        cb();
-      });
+    var outfile = path.join(dir, cleanName);
+    zf.copyFile(filename, outfile, function(err) {
+      if (err) return cb(invalid('Error copying zipfile while unpacking!'));
+      cb();
     });
   }
 
