@@ -2,7 +2,8 @@ var path = require('path');
 
 module.exports = {
   valid: {
-    world: path.join(__dirname, 'valid.world.zip')
+    world: path.join(__dirname, 'valid.world.zip'),
+    caps: path.join(__dirname, 'valid.world.caps.zip')
   },
   invalid: {
     noshp: path.join(__dirname, 'invalid.noshp.zip'),
