@@ -44,7 +44,8 @@ function getShapeFiles(zf) {
     '.atx',
     '.xml',
     '.cpg',
-    '.qix'
+    '.qix',
+    '.index'
   ];
 
   // Must contain some files
@@ -54,30 +55,30 @@ function getShapeFiles(zf) {
   // Find .shp files
   var shapefileName = filenames.filter(function(filename) {
     var accept = true;
-    if (path.extname(filename) !== '.shp') accept = false;
+    if (path.extname(filename).toLowerCase() !== '.shp') accept = false;
     if (/__MACOSX/.test(filename)) accept = false;
     return accept;
   });
 
   // Must contain exactly one .shp file
-  if (shapefileName.length !== 1){
+  if (shapefileName.length !== 1) {
     return false;
   }
 
   // Find the shapefile's basename and dir inside the zip
-  var shapefileBase = path.basename(shapefileName[0], '.shp');
+  var shapefileBase = path.basename(shapefileName[0], path.extname(shapefileName[0]));
   var shapefilePath = path.dirname(shapefileName[0]);
 
   // Find all the shapefile-files
   var shapeFiles = filenames.reduce(function(memo, filename) {
     var ext = path.extname(filename);
+    var extLower = ext.toLowerCase();
     if (ext === '.xml') ext = '.shp.xml';
     var base = path.basename(filename, ext);
     var dir = path.dirname(filename);
-
     if (base === shapefileBase &&
       dir === shapefilePath &&
-      exts.indexOf(ext) > -1) memo[ext.slice(1)] = filename;
+      exts.indexOf(extLower) > -1) memo[extLower.slice(1)] = filename;
 
     return memo;
   }, {});
@@ -92,7 +93,8 @@ function getShapeFiles(zf) {
 function sanitizeName(filename) {
   return path.basename(filename)
     .replace(/ /g, '_')
-    .replace(/\\\\/g, '_');
+    .replace(/\\\\/g, '_')
+    .toLowerCase();
 }
 
 function extractFiles(zf, files, callback) {

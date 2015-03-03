@@ -1,4 +1,4 @@
-var test = require('tape').test;
+var test = require('tape');
 var fixtures = require('./fixtures');
 var expectations = require('./expectations');
 var queue = require('queue-async');
