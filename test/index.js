@@ -1,4 +1,4 @@
-var test = require('tape').test;
+var test = require('tape');
 var fixtures = require('./fixtures');
 var expectations = require('./expectations');
 var queue = require('queue-async');
@@ -14,7 +14,8 @@ test('valid zipfiles', function(t) {
   Object.keys(fixtures.valid).forEach(function(k) {
     q.defer(function(callback) {
       shpFairy(fixtures.valid[k], function(err, output) {
-        if (err) throw err;
+        t.ifError(err, k + ': found valid shapefile');
+        if (err) return callback();
 
         var base = path.basename(output, '.shp');
         var dir = path.dirname(output);
@@ -72,7 +73,7 @@ test('executable script: valid case', function(t) {
   exec(valid, function(err, stdout, stderr) {
     if (err) throw err;
     t.notOk(stderr, 'no errors logged');
-    fs.exists(stdout.slice(0,-1), function(exists) {
+    fs.exists(stdout.slice(0, -1), function(exists) {
       t.ok(exists, 'output exists');
       t.end();
     });
