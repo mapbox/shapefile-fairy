@@ -12,7 +12,10 @@ module.exports = function(filepath, callback) {
   fs.exists(filepath, function(exists) {
     if (!exists) return callback(new Error('No such file: ' + filepath));
 
-    var zf = new zipfile.ZipFile(filepath);
+    var zf;
+    try { zf = new zipfile.ZipFile(filepath); }
+    catch (err) { return callback(invalid('Could not open your zip')); }
+
     var files = getShapeFiles(zf);
     if (!files) return callback(invalid('Failed to find a shapefile in your zip'));
 
