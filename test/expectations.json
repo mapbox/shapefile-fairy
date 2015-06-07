@@ -18,6 +18,7 @@
   "invalid": {
     "noshp": "Failed to find a shapefile in your zip",
     "nodbf": "Failed to find a shapefile in your zip",
-    "noshx": "Failed to find a shapefile in your zip"
+    "noshx": "Failed to find a shapefile in your zip",
+    "nozip": "Could not open your zip"
   }
 }
