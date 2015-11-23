@@ -6,6 +6,27 @@ var mkdirp = require('mkdirp');
 var crypto = require('crypto');
 var queue = require('queue-async');
 
+// File exts to look for according to http://en.wikipedia.org/wiki/Shapefile
+var exts = [
+  '.shp',
+  '.shx',
+  '.dbf',
+  '.prj',
+  '.sbn',
+  '.sbx',
+  '.fbn',
+  '.fbx',
+  '.ain',
+  '.aih',
+  '.ixs',
+  '.mxs',
+  '.atx',
+  '.xml',
+  '.cpg',
+  '.qix',
+  '.index'
+];
+
 module.exports = function(filepath, callback) {
   filepath = path.resolve(filepath);
 
@@ -16,10 +37,11 @@ module.exports = function(filepath, callback) {
     try { zf = new zipfile.ZipFile(filepath); }
     catch (err) { return callback(invalid('Could not open your zip')); }
 
-    var files = getShapeFiles(zf);
-    if (!files) return callback(invalid('Failed to find a shapefile in your zip'));
-
-    extractFiles(zf, files, callback);
+    try {
+      extractFiles(zf, getShapeFiles(zf), callback);
+    } catch(err) {
+      return callback(err);
+    }
   });
 };
 
@@ -30,42 +52,23 @@ function invalid(msg) {
 }
 
 function getShapeFiles(zf) {
-  // File exts to look for according to http://en.wikipedia.org/wiki/Shapefile
-  var exts = [
-    '.shp',
-    '.shx',
-    '.dbf',
-    '.prj',
-    '.sbn',
-    '.sbx',
-    '.fbn',
-    '.fbx',
-    '.ain',
-    '.aih',
-    '.ixs',
-    '.mxs',
-    '.atx',
-    '.xml',
-    '.cpg',
-    '.qix',
-    '.index'
-  ];
 
   // Must contain some files
-  if (zf.names.length === 0) return false;
-  var filenames = zf.names;
+  if (zf.names.length === 0) {
+    throw invalid('ZIP file is empty');
+  }
 
   // Find .shp files
-  var shapefileName = filenames.filter(function(filename) {
-    var accept = true;
-    if (path.extname(filename).toLowerCase() !== '.shp') accept = false;
-    if (/__MACOSX/.test(filename)) accept = false;
-    return accept;
+  var shapefileName = zf.names.filter(function(filename) {
+    return path.extname(filename).toLowerCase() === '.shp' &&
+      !/__MACOSX/.test(filename);
   });
 
   // Must contain exactly one .shp file
-  if (shapefileName.length !== 1) {
-    return false;
+  if (shapefileName.length > 1) {
+    throw invalid('ZIP file contained more than one shp file');
+  } else if (shapefileName.length === 0) {
+    throw invalid('ZIP file did not contain a shp file');
   }
 
   // Find the shapefile's basename and dir inside the zip
@@ -73,7 +76,7 @@ function getShapeFiles(zf) {
   var shapefilePath = path.dirname(shapefileName[0]);
 
   // Find all the shapefile-files
-  var shapeFiles = filenames.reduce(function(memo, filename) {
+  var shapeFiles = zf.names.reduce(function(memo, filename) {
     var ext = path.extname(filename);
     var extLower = ext.toLowerCase();
     if (ext === '.xml') ext = '.shp.xml';
@@ -81,13 +84,20 @@ function getShapeFiles(zf) {
     var dir = path.dirname(filename);
     if (base === shapefileBase &&
       dir === shapefilePath &&
-      exts.indexOf(extLower) > -1) memo[extLower.slice(1)] = filename;
-
+      exts.indexOf(extLower) > -1) {
+      memo[extLower.slice(1)] = filename;
+    }
     return memo;
   }, {});
 
-  // Must have the 3 required files
-  if (!shapeFiles.shp || !shapeFiles.dbf || !shapeFiles.shx) return false;
+  var missingFiles = ['shp', 'dbf', 'shx'].filter(function(requiredExtension) {
+    return !shapeFiles[requiredExtension];
+  });
+
+  if (missingFiles.length) {
+    var s = missingFiles.length > 1 ? 's' : '';
+    throw invalid('ZIP file was missing a required part' + s + ': ' + missingFiles.join(', '));
+  }
 
   // Passed!
   return shapeFiles;
