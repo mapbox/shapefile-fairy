@@ -4,7 +4,7 @@
   "description": "I put a zipfile under my pillow and the shapefile-fairy brought me shapefiles",
   "main": "index.js",
   "scripts": {
-    "test": "node test"
+    "test": "tap --coverage test"
   },
   "bin": {
     "shapefile-fairy": "bin/shapefile-fairy.js"
@@ -26,6 +26,6 @@
     "zipfile": "^0.5.5"
   },
   "devDependencies": {
-    "tape": "^3.0.1"
+    "tap": "^2.3.1"
   }
 }

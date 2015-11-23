@@ -1,21 +1,18 @@
-var test = require('tape');
+var test = require('tap').test;
 var fixtures = require('./fixtures');
 var expectations = require('./expectations');
-var queue = require('queue-async');
 var path = require('path');
 var shpFairy = require('..');
 var fs = require('fs');
 var path = require('path');
 var exec = require('child_process').exec;
 
-test('valid zipfiles', function(t) {
-  var q = queue();
-
+test('valid zipfiles', function(group) {
   Object.keys(fixtures.valid).forEach(function(k) {
-    q.defer(function(callback) {
+    group.test(fixtures.valid[k], function(t) {
       shpFairy(fixtures.valid[k], function(err, output) {
         t.ifError(err, k + ': found valid shapefile');
-        if (err) return callback();
+        if (err) return t.end();
 
         var base = path.basename(output, '.shp');
         var dir = path.dirname(output);
@@ -28,40 +25,29 @@ test('valid zipfiles', function(t) {
           var ext = path.extname(filename).slice(1);
           if (!expectations.valid[k].hasOwnProperty(ext)) {
             t.fail(k + ': unexpected ' + ext + ' file created');
-            return callback();
           }
-
           var stats = fs.statSync(path.join(dir, filename));
           t.equal(expectations.valid[k][ext], stats.size, k + ': ' + ext + ' is the correct size');
-          callback();
         });
+
+        return t.end();
       });
     });
   });
-
-  q.await(function(err) {
-    if (err) throw err;
-    t.end();
-  });
+  group.end();
 });
 
-test('invalid zipfiles', function(t) {
-  var q = queue();
-
+test('invalid zipfiles', function(group) {
   Object.keys(fixtures.invalid).forEach(function(k) {
-    q.defer(function(callback) {
+    group.test(fixtures.invalid[k], function(t) {
       shpFairy(fixtures.invalid[k], function(err, output) {
         t.ok(err, 'expected error');
         t.equal(err.message, expectations.invalid[k]);
-        callback();
+        t.end();
       });
     });
   });
-
-  q.await(function(err) {
-    if (err) throw err;
-    t.end();
-  });
+  group.end();
 });
 
 test('executable script: valid case', function(t) {
