@@ -1,6 +1,6 @@
 {
   "name": "shapefile-fairy",
-  "version": "0.3.1",
+  "version": "0.3.2",
   "description": "I put a zipfile under my pillow and the shapefile-fairy brought me shapefiles",
   "main": "index.js",
   "scripts": {
