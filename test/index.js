@@ -76,7 +76,7 @@ test('executable script: invalid case', function(t) {
     t.ok(err, 'expected error');
     t.equal(err.code, 3, 'expected exit code');
     t.equal(stdout, 'Usage: shapefile-fairy <path to zipped shapefile>\n', 'usage logged to stdout');
-    t.equal(stderr, 'Failed to find a shapefile in your zip\n', 'expected error message');
+    t.equal(stderr, 'ZIP file did not contain a shp file\n', 'expected error message');
     t.end();
   });
 });
@@ -92,7 +92,7 @@ test('executable script: invalid case with --quiet', function(t) {
     t.ok(err, 'expected error');
     t.equal(err.code, 3, 'expected exit code');
     t.equal(stdout, '', 'empty stdout');
-    t.equal(stderr, 'Failed to find a shapefile in your zip\n', 'expected error message');
+    t.equal(stderr, 'ZIP file did not contain a shp file\n', 'expected error message');
     t.end();
   });
 });

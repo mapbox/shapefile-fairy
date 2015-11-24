@@ -16,9 +16,12 @@
     }
   },
   "invalid": {
-    "noshp": "Failed to find a shapefile in your zip",
-    "nodbf": "Failed to find a shapefile in your zip",
-    "noshx": "Failed to find a shapefile in your zip",
+    "noshp": "ZIP file did not contain a shp file",
+    "nodbf": "ZIP file was missing a required part: dbf",
+    "noshx": "ZIP file was missing a required part: shx",
+    "onlyshp": "ZIP file was missing a required parts: dbf, shx",
+    "multishp": "ZIP file contained more than one shp file",
+    "empty": "ZIP file is empty",
     "nozip": "Could not open your zip"
   }
 }
