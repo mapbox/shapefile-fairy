@@ -22,5 +22,5 @@ addons:
 
 after_success:
  - if [[ $(uname -s) == 'Linux' ]]; then
-        ldd node_modules/zipfile/lib/*/*/*node
+        ldd node_modules/zipfile/lib/*/*/*node;
    fi
