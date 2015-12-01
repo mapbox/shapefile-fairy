@@ -23,7 +23,7 @@
     "minimist": "^1.1.0",
     "mkdirp": "^0.5.0",
     "queue-async": "^1.0.7",
-    "zipfile": "0.5.7"
+    "zipfile": "~0.5.8"
   },
   "devDependencies": {
     "tap": "^2.3.1"
