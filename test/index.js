@@ -17,7 +17,7 @@ test('valid zipfiles', function(group) {
         var base = path.basename(output, '.shp');
         var dir = path.dirname(output);
 
-        ['.shp', '.shx', '.dbf'].forEach(function(ext) {
+        ['.shp', '.shx', '.dbf', '.prj', '.index'].forEach(function(ext) {
           t.ok(fs.existsSync(path.join(dir, base + ext)), k + ': ' + ext + ' exists');
         });
 
