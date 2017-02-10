@@ -7,7 +7,7 @@ var fs = require('fs');
 var path = require('path');
 var exec = require('child_process').exec;
 
-test('valid zipfiles', function(group) {
+test('valid zipfiles, include mandatory files', function(group) {
   Object.keys(fixtures.valid).forEach(function(k) {
     group.test(fixtures.valid[k], function(t) {
       shpFairy(fixtures.valid[k], function(err, output) {
@@ -17,7 +17,7 @@ test('valid zipfiles', function(group) {
         var base = path.basename(output, '.shp');
         var dir = path.dirname(output);
 
-        ['.shp', '.shx', '.dbf', '.prj'].forEach(function(ext) {
+        ['.shp', '.shx', '.dbf'].forEach(function(ext) {
           t.ok(fs.existsSync(path.join(dir, base + ext)), k + ': ' + ext + ' exists');
         });
 
@@ -27,7 +27,7 @@ test('valid zipfiles', function(group) {
             t.fail(k + ': unexpected ' + ext + ' file created');
           }
           var stats = fs.statSync(path.join(dir, filename));
-          t.equal(expectations.valid[k][ext], stats.size, k + ': ' + ext + ' is the correct size');
+          t.equal(stats.size, expectations.valid[k][ext], k + ': ' + ext + ' is the correct size');
         });
 
         return t.end();
@@ -35,6 +35,24 @@ test('valid zipfiles', function(group) {
     });
   });
   group.end();
+});
+
+test('valid zipfile preserves all non-mandatory files', function(t) {
+  shpFairy(fixtures.valid.everything, function(err, output) {
+    if (err) return t.end();
+
+    var base = path.basename(output, '.shp');
+    var dir = path.dirname(output);
+
+    var acceptedExtensions = ['shp', 'shx', 'dbf', 'prj', 'sbn', 'sbx', 'fbn', 'fbx', 'ain', 'aih', 'ixs', 'mxs', 'atx', 'xml', 'cpg', 'qix', 'index'];
+
+    fs.readdirSync(dir).forEach(function(filename) {
+      var ext = path.extname(filename).slice(1);
+      t.ok(acceptedExtensions.indexOf(ext) > -1, ext + ' was preserved');
+    });
+
+    t.end();
+  });
 });
 
 test('invalid zipfiles', function(group) {
