@@ -1,9 +1,8 @@
 language: node_js
 
 node_js:
-- "0.10.32"
-- "0.10.40"
 - "4"
+- "6"
 
 sudo: false
 
