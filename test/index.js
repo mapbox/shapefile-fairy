@@ -1,4 +1,4 @@
-var test = require('tap').test;
+var test = require('tape').test;
 var fixtures = require('./fixtures');
 var expectations = require('./expectations');
 var path = require('path');
@@ -94,5 +94,39 @@ test('executable script: invalid case with --quiet', function(t) {
     t.equal(stdout, '', 'empty stdout');
     t.equal(stderr, 'ZIP file did not contain a shp file\n', 'expected error message');
     t.end();
+  });
+});
+
+test('executable script: replaces single backslash as expected', function(t) {
+  var valid = [
+    path.resolve(__dirname, '..', 'bin', 'shapefile-fairy.js'),
+    fixtures.valid.backslash_single
+  ].join(' ');
+
+  exec(valid, function(err, stdout, stderr) {
+    if (err) throw err;
+    t.notOk(stderr, 'no errors logged');
+    t.notOk(/\\/.test(path.basename(stdout)), 'no backwards slashes');
+    fs.exists(stdout.slice(0, -1), function(exists) {
+      t.ok(exists, 'output exists');
+      t.end();
+    });
+  });
+});
+
+test('executable script: replaces double backslash as expected', function(t) {
+  var valid = [
+    path.resolve(__dirname, '..', 'bin', 'shapefile-fairy.js'),
+    fixtures.valid.backslash_double
+  ].join(' ');
+
+  exec(valid, function(err, stdout, stderr) {
+    if (err) throw err;
+    t.notOk(stderr, 'no errors logged');
+    t.notOk(/\\/.test(path.basename(stdout)), 'no backwards slashes');
+    fs.exists(stdout.slice(0, -1), function(exists) {
+      t.ok(exists, 'output exists');
+      t.end();
+    });
   });
 });

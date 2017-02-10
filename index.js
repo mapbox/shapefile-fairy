@@ -106,7 +106,7 @@ function getShapeFiles(zf) {
 function sanitizeName(filename) {
   return path.basename(filename)
     .replace(/ /g, '_')
-    .replace(/\\\\/g, '_')
+    .replace(/\\/g, '_')
     .toLowerCase();
 }
 
