@@ -13,6 +13,37 @@
       "dbf": 24641,
       "prj": 384,
       "index": 9092
+    },
+    "backslash_single": {
+      "shp": 508,
+      "shx": 124,
+      "dbf": 36,
+      "prj": 143
+    },
+    "backslash_double": {
+      "shp": 508,
+      "shx": 124,
+      "dbf": 36,
+      "prj": 143
+    },
+    "everything": {
+      "shp": 0,
+      "shx": 0,
+      "dbf": 0,
+      "prj": 0,
+      "sbn": 0,
+      "sbx": 0,
+      "fbn": 0,
+      "fbx": 0,
+      "ain": 0,
+      "aih": 0,
+      "ixs": 0,
+      "mxs": 0,
+      "atx": 0,
+      "xml": 0,
+      "cpg": 0,
+      "qix": 0,
+      "index": 0
     }
   },
   "invalid": {

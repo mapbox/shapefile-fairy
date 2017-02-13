@@ -9,7 +9,7 @@ Extracts files composing a shapefile from a .zip archive into a temporary direct
 ## Install
 
 ```sh
-$ npm install -g shapefile-fairy
+$ npm install -g @mapbox/shapefile-fairy
 ```
 
 ## Usage
@@ -22,7 +22,7 @@ $ shapefile-fairy /path/to/zipped/shapefile.zip
 
 In JavaScript
 ```javascript
-var shpFairy = require('shapefile-fairy');
+var shpFairy = require('@mapbox/shapefile-fairy');
 
 shpFairy('/path/to/zipped/shapefile.zip', function(err, output) {
   if (err) return console.error(err);
