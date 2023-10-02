@@ -86,7 +86,7 @@ function getShapeFiles(zf) {
   console.log(shapefilePath);
 
   // Find all the shapefile-files
-  var shapeFiles = shapefileName.reduce(function(memo, filename) {
+  var shapeFiles = allfileName.reduce(function(memo, filename) {
     var ext = path.extname(filename);
     var extLower = ext.toLowerCase();
     if (ext === '.xml') ext = '.shp.xml';
@@ -99,6 +99,8 @@ function getShapeFiles(zf) {
     }
     return memo;
   }, {});
+  console.log("3");
+  console.log(shapeFiles);
 
   var missingFiles = ['shp', 'dbf', 'shx'].filter(function(requiredExtension) {
     return !shapeFiles[requiredExtension];
