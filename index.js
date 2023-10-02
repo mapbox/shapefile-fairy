@@ -1,4 +1,4 @@
-var zipfile = require('zipfile');
+var AdmZip = require('adm-zip');
 var path = require('path');
 var os = require('os');
 var fs = require('fs');
@@ -34,7 +34,7 @@ module.exports = function(filepath, callback) {
     if (!exists) return callback(new Error('No such file: ' + filepath));
 
     var zf;
-    try { zf = new zipfile.ZipFile(filepath); }
+    try { zf = new new AdmZip(filepath); }
     catch (err) { return callback(invalid('Could not open your zip')); }
 
     try {
@@ -53,16 +53,13 @@ function invalid(msg) {
 
 function getShapeFiles(zf) {
 
+  var entries = zf.getEntries();
+  var shapefileName = entries.map(function(e) { return e.entryName; });
+
   // Must contain some files
-  if (zf.names.length === 0) {
+  if (shapefileName.length === 0) {
     throw invalid('ZIP file is empty');
   }
-
-  // Find .shp files
-  var shapefileName = zf.names.filter(function(filename) {
-    return path.extname(filename).toLowerCase() === '.shp' &&
-      !/__MACOSX/.test(filename);
-  });
 
   // Must contain exactly one .shp file
   if (shapefileName.length > 1) {
@@ -76,7 +73,7 @@ function getShapeFiles(zf) {
   var shapefilePath = path.dirname(shapefileName[0]);
 
   // Find all the shapefile-files
-  var shapeFiles = zf.names.reduce(function(memo, filename) {
+  var shapeFiles = shapefileName.reduce(function(memo, filename) {
     var ext = path.extname(filename);
     var extLower = ext.toLowerCase();
     if (ext === '.xml') ext = '.shp.xml';
@@ -120,7 +117,7 @@ function extractFiles(zf, files, callback) {
   function writeFile(filename, cb) {
     var cleanName = sanitizeName(filename);
     var outfile = path.join(dir, cleanName);
-    zf.copyFile(filename, outfile, function(err) {
+    zf.extractEntryTo(filename, outfile, function(err) {
       if (err) return cb(invalid('Error copying zipfile while unpacking!'));
       cb();
     });
