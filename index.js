@@ -34,7 +34,7 @@ module.exports = function(filepath, callback) {
     if (!exists) return callback(new Error('No such file: ' + filepath));
 
     var zf;
-    try { zf = new new AdmZip(filepath); }
+    try { zf = new AdmZip(filepath); }
     catch (err) { return callback(invalid('Could not open your zip')); }
 
     try {
@@ -54,12 +54,21 @@ function invalid(msg) {
 function getShapeFiles(zf) {
 
   var entries = zf.getEntries();
-  var shapefileName = entries.map(function(e) { return e.entryName; });
+  var allfileName = entries.map(function(e) { return e.entryName; });
+  console.log(allfileName);
 
   // Must contain some files
-  if (shapefileName.length === 0) {
+  if (allfileName.length === 0) {
     throw invalid('ZIP file is empty');
   }
+
+  // Find .shp files
+  var shapefileName = allfileName.filter(function(filename) {
+    return path.extname(filename).toLowerCase() === '.shp' &&
+      !/__MACOSX/.test(filename);
+  });
+  console.log("1");
+  console.log(shapefileName);
 
   // Must contain exactly one .shp file
   if (shapefileName.length > 1) {
@@ -69,8 +78,12 @@ function getShapeFiles(zf) {
   }
 
   // Find the shapefile's basename and dir inside the zip
+  console.log(shapefileName[0]);
   var shapefileBase = path.basename(shapefileName[0], path.extname(shapefileName[0]));
   var shapefilePath = path.dirname(shapefileName[0]);
+  console.log("2");
+  console.log(shapefileBase);
+  console.log(shapefilePath);
 
   // Find all the shapefile-files
   var shapeFiles = shapefileName.reduce(function(memo, filename) {
