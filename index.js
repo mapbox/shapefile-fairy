@@ -125,11 +125,7 @@ function extractFiles(zf, files, callback) {
 
   function writeFile(filename, cb) {
     var cleanName = sanitizeName(filename);
-    var outfile = path.join(dir, cleanName);
-    zf.extractEntryTo(filename, outfile, function(err) {
-      if (err) return cb(invalid('Error copying zipfile while unpacking!'));
-      cb();
-    });
+    zf.extractEntryTo(filename, dir, true, false, false, cleanName);
   }
 
   mkdirp.sync(dir)
