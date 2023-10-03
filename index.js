@@ -55,7 +55,7 @@ function getShapeFiles(zf) {
 
   var entries = zf.getEntries();
   var allfileName = entries.map(function(e) { return e.entryName; });
-  console.log(allfileName);
+
 
   // Must contain some files
   if (allfileName.length === 0) {
@@ -67,8 +67,7 @@ function getShapeFiles(zf) {
     return path.extname(filename).toLowerCase() === '.shp' &&
       !/__MACOSX/.test(filename);
   });
-  console.log("1");
-  console.log(shapefileName);
+
 
   // Must contain exactly one .shp file
   if (shapefileName.length > 1) {
@@ -78,12 +77,9 @@ function getShapeFiles(zf) {
   }
 
   // Find the shapefile's basename and dir inside the zip
-  console.log(shapefileName[0]);
+
   var shapefileBase = path.basename(shapefileName[0], path.extname(shapefileName[0]));
   var shapefilePath = path.dirname(shapefileName[0]);
-  console.log("2");
-  console.log(shapefileBase);
-  console.log(shapefilePath);
 
   // Find all the shapefile-files
   var shapeFiles = allfileName.reduce(function(memo, filename) {
@@ -99,8 +95,6 @@ function getShapeFiles(zf) {
     }
     return memo;
   }, {});
-  console.log("3");
-  console.log(shapeFiles);
 
   var missingFiles = ['shp', 'dbf', 'shx'].filter(function(requiredExtension) {
     return !shapeFiles[requiredExtension];
@@ -138,18 +132,12 @@ function extractFiles(zf, files, callback) {
     });
   }
 
-  mkdirp(dir, function(err) {
-    if (err) return callback(err);
+  mkdirp.sync(dir)
 
-    var q = queue();
+  var q = queue();
 
-    Object.keys(files).forEach(function(ext) {
-      q.defer(writeFile, files[ext]);
-    });
-
-    q.await(function(err) {
-      if (err) return callback(err);
-      callback(null, path.join(dir, sanitizeName(files.shp)));
-    });
+  Object.keys(files).forEach(function(ext) {
+    q.defer(writeFile, files[ext]);
   });
+  callback(null, path.join(dir, sanitizeName(files.shp)));
 }
