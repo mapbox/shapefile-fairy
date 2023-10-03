@@ -1,5 +1,9 @@
 # Changelog
 
+## 0.5.0
+
+- Replace `zipfile` with `adm-zip`  [#21](https://github.com/mapbox/shapefile-fairy/issues/21)
+
 ## 0.4.0
 
 - Fix bug where the name sanitizer didn't remove single backslashes [#19](https://github.com/mapbox/shapefile-fairy/issues/19)

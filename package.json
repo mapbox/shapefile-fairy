@@ -1,6 +1,6 @@
 {
   "name": "@mapbox/shapefile-fairy",
-  "version": "0.4.0",
+  "version": "0.5.0",
   "description": "I put a zipfile under my pillow and the shapefile-fairy brought me shapefiles",
   "main": "index.js",
   "scripts": {
@@ -20,10 +20,10 @@
   },
   "homepage": "https://github.com/mapbox/shapefile-fairy",
   "dependencies": {
+    "adm-zip": "^0.5.10",
     "minimist": "^1.1.0",
-    "mkdirp": "^0.5.0",
-    "queue-async": "^1.0.7",
-    "zipfile": "~0.5.9"
+    "mkdirp": "^3.0.1",
+    "queue-async": "^1.0.7"
   },
   "devDependencies": {
     "eslint": "~1.00.0",

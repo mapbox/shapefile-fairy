@@ -1,6 +1,6 @@
 # shapefile-fairy
 
-![the shapefile fairy](https://cloud.githubusercontent.com/assets/83384/4899176/353c1124-6419-11e4-9d3c-6c84f4da4148.png)
+[![Node.js CI](https://github.com/mapbox/shapefile-fairy/actions/workflows/test.yml/badge.svg?branch=master)](https://github.com/mapbox/shapefile-fairy/actions/workflows/test.yml)
 
 Extracts files composing a shapefile from a .zip archive into a temporary directory and returns the path to the `.shp` file.
 
